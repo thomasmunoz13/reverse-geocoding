@@ -1,38 +1,49 @@
-/*global JSON,require,exports*/
-'use strict';
-var request = require('request'),
-    url = require('url'),
-    querystring = require('querystring');
-exports.location = function (config, callback) {
+import request from 'request'
+import url from 'url'
+import querystring from 'querystring'
+
+const Geocode = {};
+
+Geocode.location = function (config, callback, apiKey) {
     if (!config || !callback) {
         throw new Error('Invalid arguments number.');
     } else if (!config.latitude || !config.longitude) {
         throw new Error('Latitude or Longitude not found.');
     }
-    var latitude = config.latitude,
-        longitude = config.longitude,
-        map = config.map;
+
+    let latitude = config.latitude;
+    let longitude = config.longitude;
+    let map = config.map;
+
     delete config.latitude;
     delete config.longitude;
-    var address = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + latitude + ',' + longitude;
-    switch (map) {
-    case 'baidu':
-        address = 'http://api.map.baidu.com/geocoder/v2/?output=json&location=' + latitude + ',' + longitude;
-        break;
-    case 'opencage':
-        address = 'https://api.opencagedata.com/geocode/v1/json?q=' + latitude + ',' + longitude;
-        break;
-    default:
-        break;
+
+    let address = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + latitude + ',' + longitude;
+
+    if (apiKey) {
+        address = address + '&key=' + querystring.stringify(apiKey)
     }
+
+    switch (map) {
+        case 'baidu':
+            address = 'http://api.map.baidu.com/geocoder/v2/?output=json&location=' + latitude + ',' + longitude;
+            break;
+        case 'opencage':
+            address = 'https://api.opencagedata.com/geocode/v1/json?q=' + latitude + ',' + longitude;
+            break;
+        default:
+            break;
+    }
+
     delete config.map;
+
     address += '&' + querystring.stringify(config);
 
     try {
         request(address, function (error, response, body) {
             if (error) {
-              callback(error);
-              return;
+                callback(error);
+                return;
             }
 
             var data = JSON.parse(body);
@@ -44,7 +55,10 @@ exports.location = function (config, callback) {
                 callback(data.status);
             }
         });
-    }catch(err){
+    } catch (err) {
         callback(err);
     }
 };
+
+
+export default Geocode

@@ -28,7 +28,9 @@
     "coveralls": "^3.0.0",
     "eslint": "^4.11.0",
     "istanbul": "^0.4.5",
-    "mocha": "^4.0.1"
+    "mocha": "^4.0.1",
+    "babel-eslint": "^8.2.1",
+    "babel-preset-env": "^1.6.1"
   },
   "dependencies": {
     "request": "^2.83.0"
