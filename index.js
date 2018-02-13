@@ -21,7 +21,7 @@ Geocode.location = function (config, callback, apiKey) {
     let address = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + latitude + ',' + longitude;
 
     if (apiKey) {
-        address = address + '&key=' + querystring.stringify(apiKey)
+        address = address + '&key=' + apiKey
     }
 
     switch (map) {
